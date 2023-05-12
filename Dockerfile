@@ -4,7 +4,6 @@ FROM nginx:alpine
 # https://stackoverflow.com/a/57747905/592463
 
 COPY index.html /usr/share/nginx/html/
-COPY bil.html /usr/share/nginx/html/
 COPY favicon.ico /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY assets /usr/share/nginx/html/assets
