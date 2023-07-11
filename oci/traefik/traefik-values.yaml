@@ -1,0 +1,11 @@
+additionalArguments:
+  - --certificatesresolvers.le.acme.email=daniel.akerud@gmail.com
+  - --certificatesresolvers.le.acme.storage=/data/acme.json
+  - --certificatesresolvers.le.acme.tlschallenge=true
+  - --certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+persistence:
+  enabled: true
+  path: /data
+podSecurityContext:
+  fsGroup: 65532
+

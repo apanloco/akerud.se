@@ -1,0 +1,57 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: akerud
+  labels:
+    app: akerud
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: akerud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akerud
+  template:
+    metadata:
+      labels:
+        app: akerud
+    spec:
+      containers:
+        - name: akerud
+          image: arn.ocir.io/axiirc3u3iv6/akerud:latest
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ocirsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akerud
+  labels:
+    app: akerud
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      name: akerud
+  selector:
+    app: akerud
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-tls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`www.akerud.se`) || Host(`akerud.se`)
+      services:
+        - name: akerud
+          port: 80
+  tls:
+    certResolver: le

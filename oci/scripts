@@ -1,0 +1,27 @@
+#!/usr/bin/env -x
+
+function oracle_deploy {
+    local APP=$1
+
+    if [ -z $APP ]; then
+        echo "Usage: $0 <app>"
+        return 1
+    fi
+
+    if [ ! -f k8s/$APP.yaml ]; then
+        echo "Expecting to find k8s/$APP.yaml -- You're probably in the wrong cwd"
+        return 1
+    fi
+
+    if [ -z "$(git status --porcelain)" ]; then 
+        # git not dirty
+    else
+        echo "Git dirty. Please make sure you track what you do, and make a proper commit."
+        return 1
+    fi
+
+    docker build -t arn.ocir.io/axiirc3u3iv6/${APP}:latest . || return 1
+    docker push arn.ocir.io/axiirc3u3iv6/${APP}:latest || return 1
+    kubectl apply -f k8s/$APP.yaml --namespace $APP || return 1
+    kubectl rollout restart deployment $APP -n $APP || return 1
+}
