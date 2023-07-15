@@ -20,7 +20,7 @@ function oracle_deploy {
         return 1
     fi
 
-    docker build -t arn.ocir.io/axiirc3u3iv6/${APP}:latest . || return 1
+    docker build -t arn.ocir.io/axiirc3u3iv6/${APP}:latest . --progress plain || return 1
     docker push arn.ocir.io/axiirc3u3iv6/${APP}:latest || return 1
     kubectl apply -f k8s/$APP.yaml --namespace $APP || return 1
     kubectl rollout restart deployment $APP -n $APP || return 1

@@ -8,4 +8,12 @@ persistence:
   path: /data
 podSecurityContext:
   fsGroup: 65532
-
+ports:
+  web:
+    expose: false
+service:
+  spec:
+    externalTrafficPolicy: Local
+service:
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "nlb"
