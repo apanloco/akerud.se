@@ -2,17 +2,20 @@ additionalArguments:
   - --certificatesresolvers.le.acme.email=daniel.akerud@gmail.com
   - --certificatesresolvers.le.acme.storage=/data/acme.json
   - --certificatesresolvers.le.acme.tlschallenge=true
+  # https://doc.traefik.io/traefik/https/acme/
   - --certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
-persistence:
-  enabled: true
-  path: /data
-podSecurityContext:
-  fsGroup: 65532
+#persistence:
+#  enabled: true
+#  path: /data
+#podSecurityContext:
+#  fsGroup: 65532
 ports:
   web:
-    expose: false
+    expose: true
+    redirectTo: websecure
 service:
   spec:
+    # this allows us to see client ip's
     externalTrafficPolicy: Local
 service:
   annotations:
