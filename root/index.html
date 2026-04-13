@@ -1,35 +1,366 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>akerud.se</title>
-    <style>
-        * {
-            text-align: center;
-        }
-        .stajl {
-            height: auto;
-            width: 440px;
-            margin: 0px auto 0 auto;
-            display: block;
-            color: rgba(211, 133, 155);
-            font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>akerud.se</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #1a1423;
+        --bg2: #241a32;
+        --fg: #f4e3c1;
+        --pink: #d3859b;
+        --pink-bright: #ff8fb5;
+        --cyan: #7ae0e0;
+        --yellow: #f4d35e;
+        --green: #8fd694;
+        --purple: #b084cc;
+        --shadow: #0e0a18;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { min-height: 100%; }
+
+    body {
+        background:
+            radial-gradient(ellipse at 20% 10%, rgba(176,132,204,0.18), transparent 60%),
+            radial-gradient(ellipse at 80% 90%, rgba(122,224,224,0.12), transparent 55%),
+            var(--bg);
+        color: var(--fg);
+        font-family: 'VT323', Menlo, Consolas, monospace;
+        image-rendering: pixelated;
+        -webkit-font-smoothing: none;
+        font-smooth: never;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+        position: relative;
+    }
+
+    /* starfield */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+            radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+            radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+            radial-gradient(1px 1px at 55% 35%, #fff, transparent),
+            radial-gradient(1px 1px at 70% 70%, #fff, transparent),
+            radial-gradient(1px 1px at 85% 15%, #fff, transparent),
+            radial-gradient(1px 1px at 15% 55%, #f4d35e, transparent),
+            radial-gradient(1px 1px at 92% 50%, #7ae0e0, transparent),
+            radial-gradient(1px 1px at 45% 90%, #ff8fb5, transparent);
+        opacity: 0.55;
+        pointer-events: none;
+        animation: twinkle 4s steps(4) infinite;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 0.3; }
+    }
+
+    /* scanlines */
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(0,0,0,0) 0px,
+            rgba(0,0,0,0) 2px,
+            rgba(0,0,0,0.08) 3px,
+            rgba(0,0,0,0) 4px
+        );
+        pointer-events: none;
+        z-index: 999;
+        mix-blend-mode: multiply;
+    }
+
+    .frame {
+        width: 100%;
+        max-width: 640px;
+        border: 4px solid var(--pink);
+        background: var(--bg2);
+        padding: 28px 28px 24px;
+        position: relative;
+        box-shadow:
+            0 0 0 4px var(--shadow),
+            0 0 0 8px var(--pink),
+            8px 8px 0 8px var(--shadow),
+            0 0 40px rgba(211,133,155,0.35);
+        image-rendering: pixelated;
+    }
+
+    .frame::before {
+        content: "AKERUD.SE v2.6";
+        position: absolute;
+        top: -14px;
+        left: 20px;
+        background: var(--bg2);
+        color: var(--pink-bright);
+        padding: 0 10px;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .frame::after {
+        content: "● ○ ○";
+        position: absolute;
+        top: -12px;
+        right: 16px;
+        background: var(--bg2);
+        color: var(--pink);
+        padding: 0 8px;
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .pixel-art {
+        display: block;
+        width: 160px;
+        height: auto;
+        margin-bottom: 10px;
+        filter: drop-shadow(4px 4px 0 var(--shadow));
+        animation: float 3s steps(2) infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+    }
+
+    h1 {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 22px;
+        color: var(--yellow);
+        text-shadow:
+            2px 2px 0 var(--shadow),
+            4px 4px 0 rgba(211,133,155,0.3);
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+    }
+
+    .tagline {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 8px;
+        color: var(--cyan);
+        letter-spacing: 2px;
+        opacity: 0.85;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin: 16px 0 18px;
+        color: var(--pink);
+        font-size: 20px;
+    }
+    .divider .line {
+        flex: 1;
+        height: 2px;
+        background:
+            repeating-linear-gradient(90deg, var(--pink) 0 4px, transparent 4px 8px);
+    }
+
+    nav ul {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: rgba(0,0,0,0.25);
+        border: 2px solid transparent;
+        color: var(--fg);
+        text-decoration: none;
+        font-family: 'VT323', monospace;
+        font-size: 22px;
+        letter-spacing: 1px;
+        transition: none;
+        position: relative;
+    }
+
+    nav a .bullet {
+        color: var(--pink);
+        font-size: 18px;
+        width: 16px;
+        display: inline-block;
+    }
+
+    nav a .label { flex: 1; }
+
+    nav a .arrow {
+        opacity: 0;
+        color: var(--yellow);
+    }
+
+    nav a:hover, nav a:focus {
+        border-color: var(--yellow);
+        background: rgba(244,211,94,0.1);
+        color: var(--yellow);
+        outline: none;
+        transform: translate(-2px, -2px);
+        box-shadow: 2px 2px 0 var(--shadow);
+    }
+    nav a:hover .bullet { color: var(--yellow); }
+    nav a:hover .arrow { opacity: 1; animation: blink 0.6s steps(2) infinite; }
+
+    @keyframes blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+    }
+
+    footer {
+        margin-top: 22px;
+        padding-top: 14px;
+        border-top: 2px dashed rgba(211,133,155,0.4);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        color: rgba(244,227,193,0.6);
+    }
+
+    .blink {
+        color: var(--pink-bright);
+        animation: blink 1s steps(2) infinite;
+    }
+
+    .hp { color: var(--green); }
+    .mp { color: var(--cyan); }
+
+    @media (max-width: 480px) {
+        nav ul { grid-template-columns: 1fr; }
+        h1 { font-size: 16px; }
+        .frame { padding: 22px 18px 18px; }
+    }
+</style>
 </head>
-<body style="background-color: rgba(40, 40, 40, 1.0);">
-<span class="stajl">
-    <a class="stajl" href="https://walker.akerud.se">walker</a><br>
-    <a class="stajl" href="https://kalender.akerud.se">kalender</a><br>
-    <a class="stajl" href="https://plates.akerud.se">plates</a><br>
-    <a class="stajl" href="https://the-flush.akerud.se">the flush</a><br>
-    <a class="stajl" href="https://bil.akerud.se">bil</a><br>
-    <a class="stajl" href="https://glosor.akerud.se">glosor</a><br>
-    <a class="stajl" href="https://scratch.mit.edu/projects/640988227/fullscreen">i came from watermelon</a><br>
-    <a class="stajl" href="https://scratch.mit.edu/projects/795372268/fullscreen">spongebob racer</a><br>
-    <a class="stajl" href="https://lemmings.akerud.se">lemmings</a><br>
-    <a class="stajl" href="https://caticorn.akerud.se">caticorn</a><br>
-    <a class="stajl" href="https://scratch.mit.edu/projects/827222284/fullscreen">SURVIVE THE KUNAI'S!</a><br>
-    </span>
+<body>
+
+<main class="frame">
+    <header>
+        <!-- pixel cat sprite drawn with SVG, one pixel = one rect -->
+        <svg class="pixel-art" viewBox="0 0 20 20" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" aria-label="pixel cat">
+            <!-- palette: body=#d3859b, dark=#8a4a63, white=#f4e3c1, eye=#1a1423, cheek=#ff8fb5, horn=#f4d35e -->
+            <g fill="#d3859b">
+                <!-- ears -->
+                <rect x="4"  y="4" width="2" height="2"/>
+                <rect x="5"  y="3" width="1" height="1"/>
+                <rect x="14" y="4" width="2" height="2"/>
+                <rect x="14" y="3" width="1" height="1"/>
+                <!-- head -->
+                <rect x="4"  y="6" width="12" height="6"/>
+                <rect x="5"  y="12" width="10" height="1"/>
+                <!-- body -->
+                <rect x="5"  y="13" width="10" height="3"/>
+                <rect x="6"  y="16" width="8" height="1"/>
+                <!-- legs -->
+                <rect x="6"  y="17" width="2" height="2"/>
+                <rect x="12" y="17" width="2" height="2"/>
+                <!-- tail -->
+                <rect x="15" y="14" width="1" height="1"/>
+                <rect x="16" y="13" width="1" height="3"/>
+                <rect x="17" y="12" width="1" height="2"/>
+            </g>
+            <!-- horn (caticorn!) -->
+            <g fill="#f4d35e">
+                <rect x="9" y="2" width="2" height="1"/>
+                <rect x="9" y="1" width="1" height="1"/>
+            </g>
+            <!-- inner ears -->
+            <g fill="#8a4a63">
+                <rect x="5"  y="5" width="1" height="1"/>
+                <rect x="14" y="5" width="1" height="1"/>
+            </g>
+            <!-- belly -->
+            <g fill="#f4e3c1">
+                <rect x="8"  y="13" width="4" height="3"/>
+                <rect x="9"  y="11" width="2" height="2"/>
+            </g>
+            <!-- eyes -->
+            <g fill="#1a1423">
+                <rect x="7"  y="8" width="2" height="2"/>
+                <rect x="11" y="8" width="2" height="2"/>
+            </g>
+            <!-- eye glints -->
+            <g fill="#f4e3c1">
+                <rect x="8"  y="8" width="1" height="1"/>
+                <rect x="12" y="8" width="1" height="1"/>
+            </g>
+            <!-- cheeks -->
+            <g fill="#ff8fb5">
+                <rect x="6"  y="10" width="1" height="1"/>
+                <rect x="13" y="10" width="1" height="1"/>
+            </g>
+            <!-- mouth -->
+            <g fill="#1a1423">
+                <rect x="9"  y="10" width="1" height="1"/>
+                <rect x="10" y="10" width="1" height="1"/>
+            </g>
+            <!-- paws -->
+            <g fill="#8a4a63">
+                <rect x="6"  y="19" width="2" height="1"/>
+                <rect x="12" y="19" width="2" height="1"/>
+            </g>
+        </svg>
+
+        <h1>AKERUD</h1>
+        <div class="tagline">&lt; PRESS START &gt;</div>
+    </header>
+
+    <div class="divider">
+        <span class="line"></span>
+        <span>◆</span>
+        <span class="line"></span>
+    </div>
+
+    <nav aria-label="main">
+        <ul>
+            <li><a href="https://walker.akerud.se"><span class="bullet">►</span><span class="label">walker</span><span class="arrow">●</span></a></li>
+            <li><a href="https://kalender.akerud.se"><span class="bullet">►</span><span class="label">kalender</span><span class="arrow">●</span></a></li>
+            <li><a href="https://plates.akerud.se"><span class="bullet">►</span><span class="label">plates</span><span class="arrow">●</span></a></li>
+            <li><a href="https://the-flush.akerud.se"><span class="bullet">►</span><span class="label">the flush</span><span class="arrow">●</span></a></li>
+            <li><a href="https://bil.akerud.se"><span class="bullet">►</span><span class="label">bil</span><span class="arrow">●</span></a></li>
+            <li><a href="https://glosor.akerud.se"><span class="bullet">►</span><span class="label">glosor</span><span class="arrow">●</span></a></li>
+            <li><a href="https://lemmings.akerud.se"><span class="bullet">►</span><span class="label">lemmings</span><span class="arrow">●</span></a></li>
+            <li><a href="https://caticorn.akerud.se"><span class="bullet">►</span><span class="label">caticorn</span><span class="arrow">●</span></a></li>
+            <li><a href="https://scratch.mit.edu/projects/640988227/fullscreen"><span class="bullet">♪</span><span class="label">i came from watermelon</span><span class="arrow">●</span></a></li>
+            <li><a href="https://scratch.mit.edu/projects/795372268/fullscreen"><span class="bullet">♪</span><span class="label">spongebob racer</span><span class="arrow">●</span></a></li>
+            <li style="grid-column: 1 / -1;"><a href="https://scratch.mit.edu/projects/827222284/fullscreen"><span class="bullet">★</span><span class="label">SURVIVE THE KUNAI'S!</span><span class="arrow">●</span></a></li>
+        </ul>
+    </nav>
+
+    <footer>
+        <span class="hp">HP ████████</span>
+        <span class="mp">MP ██████░░</span>
+        <span class="blink">▌</span>
+    </footer>
+</main>
+
 </body>
 </html>
-
